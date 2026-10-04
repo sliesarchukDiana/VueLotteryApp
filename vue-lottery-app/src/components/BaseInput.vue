@@ -69,7 +69,7 @@ defineEmits<{
 
   &:focus {
     background-color: #ffffff;
-    border-color: #2bbbad;
+    border-color: #c85e06;
   }
 
   &.is-invalid {
@@ -78,7 +78,7 @@ defineEmits<{
   }
 
   &.is-valid {
-    border-color: #2bbbad;
+    border-color: #c85e06;
     padding-right: 32px;
   }
 }
@@ -86,7 +86,7 @@ defineEmits<{
 .valid-icon {
   position: absolute;
   right: 10px;
-  color: #2bbbad;
+  color: #c85e06;
   font-weight: bold;
 }
 

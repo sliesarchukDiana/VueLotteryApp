@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import type { Participant, ValidationErrors } from '../types/participant';
+import type { Participant, ValidationErrors } from '@/types/participant';
 import BaseInput from './BaseInput.vue';
 import BaseButton from './BaseButton.vue';
 
@@ -33,12 +33,12 @@ const validate = (): boolean => {
   errors.phone = '';
 
   if (!formData.name.trim()) {
-    errors.name = 'This value is required.';
+    errors.name = 'Шось не то...';
     isValid = false;
   }
 
   if (!formData.dateOfBirth) {
-    errors.dateOfBirth = 'This value is required.';
+    errors.dateOfBirth = 'Шось не то...';
     isValid = false;
   } else {
     const selectedDate = new Date(formData.dateOfBirth);
@@ -46,31 +46,31 @@ const validate = (): boolean => {
     today.setHours(0, 0, 0, 0);
 
     if (selectedDate > today) {
-      errors.dateOfBirth = 'Date of birth cannot be in the future.';
+      errors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
       isValid = false;
     }
   }
 
   if (!formData.email.trim()) {
-    errors.email = 'This value is required.';
+    errors.email = 'Шось не то...';
     isValid = false;
   } else if (!emailRegex.test(formData.email.trim())) {
-    errors.email = 'Please enter a valid email address.';
+    errors.email = 'По-людськи напиши пошту.';
     isValid = false;
   } else if (
     props.existingEmails.some(
       (email) => email.toLowerCase() === formData.email.trim().toLowerCase()
     )
   ) {
-    errors.email = 'A participant with this email already exists.';
+    errors.email = 'Такий вумний як ти вже є.';
     isValid = false;
   }
 
   if (!formData.phone.trim()) {
-    errors.phone = 'This value is required.';
+    errors.phone = 'Шось не то...';
     isValid = false;
   } else if (!phoneRegex.test(formData.phone.trim())) {
-    errors.phone = 'Phone number must match format +380XXXXXXXXX.';
+    errors.phone = 'Тебе вчити правильно телефон записувати? Формат: +380XXXXXXXXX.';
     isValid = false;
   }
 
@@ -108,8 +108,8 @@ const handleSubmit = () => {
 <template>
   <div class="card-custom register-form-card">
     <div class="form-header">
-      <h3 class="form-title">REGISTER FORM</h3>
-      <p class="form-subtitle">Please fill in all the fields.</p>
+      <h3 class="form-title">Реєстрація</h3>
+      <p class="form-subtitle">Заповніть усі поля.</p>
     </div>
 
     <form @submit.prevent="handleSubmit" @keyup.enter="handleSubmit">

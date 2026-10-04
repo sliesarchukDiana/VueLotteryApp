@@ -45,11 +45,11 @@ defineEmits<{
 }
 
 .btn-primary {
-  background-color: #2bbbad;
+  background-color: #ec934b;
   color: #ffffff;
 
   &:hover:not(:disabled) {
-    background-color: #249d91;
+    background-color: #c16627;
   }
 }
 
@@ -63,7 +63,7 @@ defineEmits<{
 }
 
 .btn-danger {
-  background-color: #e57373;
+  background-color: #d63131;
   color: #ffffff;
 
   &:hover:not(:disabled) {

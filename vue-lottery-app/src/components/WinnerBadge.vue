@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Participant } from '../types/participant';
+import type { Participant } from '@/types/participant';
 
 defineProps<{
   winner: Participant;
@@ -28,7 +28,7 @@ defineEmits<{
 .winner-badge {
   display: inline-flex;
   align-items: center;
-  background-color: #4fc3f7;
+  background-color: #ec934b;
   color: #ffffff;
   padding: 4px 10px;
   border-radius: 4px;
@@ -52,7 +52,7 @@ defineEmits<{
   padding: 0;
 
   &:hover {
-    color: #0d47a1;
+    color: #532000;
   }
 }
 </style>

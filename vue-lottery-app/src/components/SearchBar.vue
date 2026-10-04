@@ -44,7 +44,7 @@ watch(searchTerm, (newVal) => {
   background-color: #ffffff;
 
   &:focus {
-    border-color: #2bbbad;
+    border-color: #c85e06;
   }
 }
 </style>

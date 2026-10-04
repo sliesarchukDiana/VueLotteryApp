@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
-import type { Participant, SortField, SortOrder, ValidationErrors } from '../types/participant';
+import type { Participant, SortField, SortOrder, ValidationErrors } from '@/types/participant';
 import SearchBar from './SearchBar.vue';
 import BaseModal from './BaseModal.vue';
 import BaseButton from './BaseButton.vue';
@@ -104,44 +104,44 @@ const saveEdit = () => {
   editErrors.phone = '';
 
   if (!editForm.name.trim()) {
-    editErrors.name = 'This value is required.';
+    editErrors.name = 'Шось не то...';
     valid = false;
   }
 
   if (!editForm.dateOfBirth) {
-    editErrors.dateOfBirth = 'This value is required.';
+    editErrors.dateOfBirth = 'Шось не то...';
     valid = false;
   } else {
     const selDate = new Date(editForm.dateOfBirth);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (selDate > today) {
-      editErrors.dateOfBirth = 'Date cannot be in the future.';
+      editErrors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
       valid = false;
     }
   }
 
   if (!editForm.email.trim()) {
-    editErrors.email = 'This value is required.';
+    editErrors.email = 'Шось не то...';
     valid = false;
   } else if (!emailRegex.test(editForm.email.trim())) {
-    editErrors.email = 'Invalid email address.';
+    editErrors.email = 'По-людськи напиши пошту.';
     valid = false;
   } else {
     const isDuplicate = props.participants.some(
       (p) => p.id !== editForm.id && p.email.toLowerCase() === editForm.email.trim().toLowerCase()
     );
     if (isDuplicate) {
-      editErrors.email = 'A participant with this email already exists.';
+      editErrors.email = 'Такий вумний як ти вже є.';
       valid = false;
     }
   }
 
   if (!editForm.phone.trim()) {
-    editErrors.phone = 'This value is required.';
+    editErrors.phone = 'Шось не то...';
     valid = false;
   } else if (!phoneRegex.test(editForm.phone.trim())) {
-    editErrors.phone = 'Phone must be in format +380XXXXXXXXX.';
+    editErrors.phone = 'Тебе вчити правильно телефон записувати? Формат: +380XXXXXXXXX.';
     valid = false;
   }
 
@@ -183,7 +183,7 @@ const saveEdit = () => {
         </thead>
         <tbody>
           <tr v-if="processedParticipants.length === 0">
-            <td colspan="6" class="text-center empty-msg">Немає зареєстрованих учасників</td>
+            <td colspan="6" class="text-center empty-msg">Немає учасників</td>
           </tr>
           <tr v-for="(participant, index) in processedParticipants" :key="participant.id">
             <td>{{ index + 1 }}</td>
@@ -206,7 +206,7 @@ const saveEdit = () => {
 
     <BaseModal :is-open="isDeleteModalOpen" title="Підтвердження видалення" @close="isDeleteModalOpen = false">
       <p v-if="participantToDelete">
-        Ви дійсно бажаєте видалити учасника "{{ participantToDelete.name }}", "{{ participantToDelete.email }}"?
+        Ви дійсно бажаєте видалити учасника "{{ participantToDelete.name }}"?
       </p>
       <template #footer>
         <BaseButton variant="secondary" @click="isDeleteModalOpen = false">Ні</BaseButton>
