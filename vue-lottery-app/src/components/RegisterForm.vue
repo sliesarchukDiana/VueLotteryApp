@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import type { Participant, ValidationErrors } from '@/types/participant';
+import type { Participant, ValidationErrors } from '../types/participant';
+import { useValidation } from '../composables/useValidation';
 import BaseInput from './BaseInput.vue';
 import BaseButton from './BaseButton.vue';
+
+const { isRequired, isValidEmail, isValidPhone, isNotFutureDate } = useValidation();
 
 const props = defineProps<{
   existingEmails: string[];
@@ -22,9 +25,6 @@ const formData = reactive({
 const errors = reactive<ValidationErrors>({});
 const isSubmitted = ref(false);
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+380\d{9}$/;
-
 const validate = (): boolean => {
   let isValid = true;
   errors.name = '';
@@ -32,44 +32,38 @@ const validate = (): boolean => {
   errors.email = '';
   errors.phone = '';
 
-  if (!formData.name.trim()) {
+  if (!isRequired(formData.name)) {
     errors.name = 'Шось не то...';
     isValid = false;
   }
 
-  if (!formData.dateOfBirth) {
+  if (!isRequired(formData.dateOfBirth)) {
     errors.dateOfBirth = 'Шось не то...';
     isValid = false;
-  } else {
-    const selectedDate = new Date(formData.dateOfBirth);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (selectedDate > today) {
-      errors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
-      isValid = false;
-    }
+  } else if (!isNotFutureDate(formData.dateOfBirth)) {
+    errors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
+    isValid = false;
   }
 
-  if (!formData.email.trim()) {
+  if (!isRequired(formData.email)) {
     errors.email = 'Шось не то...';
     isValid = false;
-  } else if (!emailRegex.test(formData.email.trim())) {
+  } else if (!isValidEmail(formData.email)) {
     errors.email = 'По-людськи напиши пошту.';
     isValid = false;
   } else if (
-    props.existingEmails.some(
-      (email) => email.toLowerCase() === formData.email.trim().toLowerCase()
-    )
+      props.existingEmails.some(
+          (email) => email.toLowerCase() === formData.email.trim().toLowerCase()
+      )
   ) {
     errors.email = 'Такий вумний як ти вже є.';
     isValid = false;
   }
 
-  if (!formData.phone.trim()) {
+  if (!isRequired(formData.phone)) {
     errors.phone = 'Шось не то...';
     isValid = false;
-  } else if (!phoneRegex.test(formData.phone.trim())) {
+  } else if (!isValidPhone(formData.phone)) {
     errors.phone = 'Тебе вчити правильно телефон записувати? Формат: +380XXXXXXXXX.';
     isValid = false;
   }
@@ -114,37 +108,37 @@ const handleSubmit = () => {
 
     <form @submit.prevent="handleSubmit" @keyup.enter="handleSubmit">
       <BaseInput
-        v-model="formData.name"
-        label="Name"
-        placeholder="Enter user name"
-        :error-message="errors.name"
-        :is-valid="isSubmitted && !errors.name"
+          v-model="formData.name"
+          label="Name"
+          placeholder="Enter user name"
+          :error-message="errors.name"
+          :is-valid="isSubmitted && !errors.name"
       />
 
       <BaseInput
-        v-model="formData.dateOfBirth"
-        type="date"
-        label="Date of Birth"
-        placeholder="yyyy-mm-dd"
-        :error-message="errors.dateOfBirth"
-        :is-valid="isSubmitted && !errors.dateOfBirth"
+          v-model="formData.dateOfBirth"
+          type="date"
+          label="Date of Birth"
+          placeholder="yyyy-mm-dd"
+          :error-message="errors.dateOfBirth"
+          :is-valid="isSubmitted && !errors.dateOfBirth"
       />
 
       <BaseInput
-        v-model="formData.email"
-        type="email"
-        label="Email"
-        placeholder="Enter email"
-        :error-message="errors.email"
-        :is-valid="isSubmitted && !errors.email"
+          v-model="formData.email"
+          type="email"
+          label="Email"
+          placeholder="Enter email"
+          :error-message="errors.email"
+          :is-valid="isSubmitted && !errors.email"
       />
 
       <BaseInput
-        v-model="formData.phone"
-        label="Phone number"
-        placeholder="+380XXXXXXXXX"
-        :error-message="errors.phone"
-        :is-valid="isSubmitted && !errors.phone"
+          v-model="formData.phone"
+          label="Phone number"
+          placeholder="+380XXXXXXXXX"
+          :error-message="errors.phone"
+          :is-valid="isSubmitted && !errors.phone"
       />
 
       <div class="button-container">

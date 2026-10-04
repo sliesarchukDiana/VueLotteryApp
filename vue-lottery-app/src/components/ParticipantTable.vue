@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, reactive } from 'vue';
-import type { Participant, SortField, SortOrder, ValidationErrors } from '@/types/participant';
+import { useValidation } from '../composables/useValidation';
+import type { Participant, SortField, SortOrder, ValidationErrors } from '../types/participant';
 import SearchBar from './SearchBar.vue';
 import BaseModal from './BaseModal.vue';
 import BaseButton from './BaseButton.vue';
 import BaseInput from './BaseInput.vue';
+
+const { isRequired, isValidEmail, isValidPhone, isNotFutureDate } = useValidation();
 
 const props = defineProps<{
   participants: Participant[];
@@ -93,9 +96,6 @@ const openEditModal = (p: Participant) => {
   isEditModalOpen.value = true;
 };
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\+380\d{9}$/;
-
 const saveEdit = () => {
   let valid = true;
   editErrors.name = '';
@@ -103,33 +103,28 @@ const saveEdit = () => {
   editErrors.email = '';
   editErrors.phone = '';
 
-  if (!editForm.name.trim()) {
+  if (!isRequired(editForm.name)) {
     editErrors.name = 'Шось не то...';
     valid = false;
   }
 
-  if (!editForm.dateOfBirth) {
+  if (!isRequired(editForm.dateOfBirth)) {
     editErrors.dateOfBirth = 'Шось не то...';
     valid = false;
-  } else {
-    const selDate = new Date(editForm.dateOfBirth);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (selDate > today) {
-      editErrors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
-      valid = false;
-    }
+  } else if (!isNotFutureDate(editForm.dateOfBirth)) {
+    editErrors.dateOfBirth = 'Шо, вумний сильно, другий Тітор?';
+    valid = false;
   }
 
-  if (!editForm.email.trim()) {
+  if (!isRequired(editForm.email)) {
     editErrors.email = 'Шось не то...';
     valid = false;
-  } else if (!emailRegex.test(editForm.email.trim())) {
+  } else if (!isValidEmail(editForm.email)) {
     editErrors.email = 'По-людськи напиши пошту.';
     valid = false;
   } else {
     const isDuplicate = props.participants.some(
-      (p) => p.id !== editForm.id && p.email.toLowerCase() === editForm.email.trim().toLowerCase()
+        (p) => p.id !== editForm.id && p.email.toLowerCase() === editForm.email.trim().toLowerCase()
     );
     if (isDuplicate) {
       editErrors.email = 'Такий вумний як ти вже є.';
@@ -137,10 +132,10 @@ const saveEdit = () => {
     }
   }
 
-  if (!editForm.phone.trim()) {
+  if (!isRequired(editForm.phone)) {
     editErrors.phone = 'Шось не то...';
     valid = false;
-  } else if (!phoneRegex.test(editForm.phone.trim())) {
+  } else if (!isValidPhone(editForm.phone)) {
     editErrors.phone = 'Тебе вчити правильно телефон записувати? Формат: +380XXXXXXXXX.';
     valid = false;
   }
@@ -166,47 +161,47 @@ const saveEdit = () => {
     <div class="table-responsive">
       <table class="table custom-table">
         <thead>
-          <tr>
-            <th>#</th>
-            <th class="sortable" @click="toggleSort('name')">
-              Name
-              <span class="sort-icon">{{ sortField === 'name' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕' }}</span>
-            </th>
-            <th class="sortable" @click="toggleSort('dateOfBirth')">
-              Date of Birth
-              <span class="sort-icon">{{ sortField === 'dateOfBirth' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕' }}</span>
-            </th>
-            <th>Email</th>
-            <th>Phone number</th>
-            <th>Дії</th>
-          </tr>
+        <tr>
+          <th>#</th>
+          <th class="sortable" @click="toggleSort('name')">
+            Name
+            <span class="sort-icon">{{ sortField === 'name' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕' }}</span>
+          </th>
+          <th class="sortable" @click="toggleSort('dateOfBirth')">
+            Date of Birth
+            <span class="sort-icon">{{ sortField === 'dateOfBirth' ? (sortOrder === 'asc' ? '▲' : '▼') : '↕' }}</span>
+          </th>
+          <th>Email</th>
+          <th>Phone number</th>
+          <th>Дії</th>
+        </tr>
         </thead>
         <tbody>
-          <tr v-if="processedParticipants.length === 0">
-            <td colspan="6" class="text-center empty-msg">Немає учасників</td>
-          </tr>
-          <tr v-for="(participant, index) in processedParticipants" :key="participant.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ participant.name }}</td>
-            <td>{{ participant.dateOfBirth }}</td>
-            <td>{{ participant.email }}</td>
-            <td>{{ participant.phone }}</td>
-            <td class="actions-cell">
-              <BaseButton variant="secondary" @click="openEditModal(participant)">
-                Редагувати дані
-              </BaseButton>
-              <BaseButton variant="danger" @click="openDeleteModal(participant)">
-                Видалити учасника
-              </BaseButton>
-            </td>
-          </tr>
+        <tr v-if="processedParticipants.length === 0">
+          <td colspan="6" class="text-center empty-msg">Немає учасників</td>
+        </tr>
+        <tr v-for="(participant, index) in processedParticipants" :key="participant.id">
+          <td>{{ index + 1 }}</td>
+          <td>{{ participant.name }}</td>
+          <td>{{ participant.dateOfBirth }}</td>
+          <td>{{ participant.email }}</td>
+          <td>{{ participant.phone }}</td>
+          <td class="actions-cell">
+            <BaseButton variant="secondary" @click="openEditModal(participant)">
+              Редагувати дані
+            </BaseButton>
+            <BaseButton variant="danger" @click="openDeleteModal(participant)">
+              Видалити учасника
+            </BaseButton>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
 
     <BaseModal :is-open="isDeleteModalOpen" title="Підтвердження видалення" @close="isDeleteModalOpen = false">
       <p v-if="participantToDelete">
-        Ви дійсно бажаєте видалити учасника "{{ participantToDelete.name }}"?
+        Ви дійсно бажаєте видалити учасника "{{ participantToDelete.name }}", "{{ participantToDelete.email }}"?
       </p>
       <template #footer>
         <BaseButton variant="secondary" @click="isDeleteModalOpen = false">Ні</BaseButton>
