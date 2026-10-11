@@ -11,6 +11,6 @@ export interface Editable<T, TUpdate> {
     update(id: number, data: TUpdate): Promise<T>;
 }
 
-export interface Deletable {
+export interface Deletable<T> {
     delete(id: number): Promise<void>;
 }

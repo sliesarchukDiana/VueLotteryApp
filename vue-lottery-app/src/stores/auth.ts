@@ -36,5 +36,18 @@ export const useAuthStore = defineStore('auth', () => {
         router.push({ name: 'login' });
     };
 
-    return { accessToken, refreshToken, user, isAuthenticated, login, logout, setTokens, clearAuth };
+    const fetchUser = async () => {
+        if (!accessToken.value) return;
+        try {
+            const data = await ServiceProvider.auth.getMe();
+            user.value = data;
+        } catch (error) {
+            clearAuth();
+        }
+    };
+
+    return {
+        accessToken, refreshToken, user, isAuthenticated,
+        login, logout, setTokens, clearAuth, fetchUser
+    };
 });

@@ -1,3 +1,4 @@
+import UsersLayout from '@/views/UsersLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
@@ -20,23 +21,36 @@ const router = createRouter({
         },
         {
             path: '/users',
-            name: 'users',
-            component: () => import('@/views/UsersView.vue'),
-            meta: { layout: DefaultLayout, requiresAuth: true, title: 'Користувачі' }
-        },
-        {
-            path: '/users/:id',
-            name: 'user-details',
-            component: () => import('@/views/UserDetailsView.vue'),
-            props: true,
-            meta: { layout: DefaultLayout, requiresAuth: true, title: 'Деталі користувача' }
-        },
-        {
-            path: '/users/:id/edit',
-            name: 'user-edit',
-            component: () => import('@/views/UserEditView.vue'),
-            props: true,
-            meta: { layout: DefaultLayout, requiresAuth: true, title: 'Редагування користувача' }
+            component: UsersLayout,
+            meta: { layout: DefaultLayout, requiresAuth: true },
+            children: [
+                {
+                    path: '',
+                    name: 'users',
+                    component: () => import('@/views/UsersView.vue'),
+                    meta: { title: 'Користувачі' }
+                },
+                {
+                    path: 'new',
+                    name: 'user-create',
+                    component: () => import('@/views/UserEditView.vue'),
+                    meta: { title: 'Створення користувача' }
+                },
+                {
+                    path: ':id',
+                    name: 'user-details',
+                    component: () => import('@/views/UserDetailsView.vue'),
+                    props: true,
+                    meta: { title: 'Деталі користувача' }
+                },
+                {
+                    path: ':id/edit',
+                    name: 'user-edit',
+                    component: () => import('@/views/UserEditView.vue'),
+                    props: true,
+                    meta: { title: 'Редагування користувача' }
+                }
+            ]
         },
         {
             path: '/login',

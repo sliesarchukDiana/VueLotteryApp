@@ -1,7 +1,7 @@
 <template>
   <div class="home-page card-custom">
     <h2>Про застосунок</h2>
-    <p>Vue Lottery App — це SPA-застосунок для керування учасниками. Лабораторна робота №5.</p>
+    <p>Vue Lottery App - SPA-застосунок для керування учасниками.</p>
 
     <h3>Використані технології:</h3>
     <ul>
@@ -14,7 +14,7 @@
 
     <p>
       <strong>GitHub проєкту:</strong>
-      <a href="" target="_blank">Перейти до репозиторію</a>
+      <a href="https://github.com/sliesarchukDiana/VueLotteryApp.git" target="_blank">Перейти до репозиторію</a>
     </p>
   </div>
 </template>

@@ -6,7 +6,7 @@ export class UserService implements
     Readable<User>,
     Creatable<User, CreateUserDto>,
     Editable<User, UpdateUserDto>,
-    Deletable {
+    Deletable<User> {
 
     async getAll(params: { limit?: number; skip?: number; q?: string } = { limit: 10, skip: 0 }) {
         const endpoint = params.q ? '/users/search' : '/users';

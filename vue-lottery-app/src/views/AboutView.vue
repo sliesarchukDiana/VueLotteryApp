@@ -1,7 +1,7 @@
 <template>
   <div class="about-page card-custom">
     <h2>Про автора</h2>
-    <p><strong>ПІБ:</strong> Прізвище Ім'я По батькові</p> <!-- Заміни на свої дані -->
+    <p><strong>ПІБ:</strong> Слєсарчук Діана Дмитрівна</p>
 
     <h3>Technical skills:</h3>
     <ul>
@@ -13,8 +13,7 @@
 
     <p>
       <strong>GitHub акаунт:</strong>
-      <!-- Заміни посилання на свій профіль -->
-      <a href="https://github.com/username" target="_blank">github.com/username</a>
+      <a href="https://github.com/sliesarchukDiana" target="_blank">github.com/sliesarchukDiana</a>
     </p>
   </div>
 </template>

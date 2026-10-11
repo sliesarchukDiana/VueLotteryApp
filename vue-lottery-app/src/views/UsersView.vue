@@ -1,27 +1,32 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ServiceProvider } from '@/services/service-provider'
+import { storeToRefs } from 'pinia'
+import { useUsersStore } from '@/stores/users'
 import type { User } from '@/types/user'
+
 import WinnerBlock from '@/components/WinnerBlock.vue'
+import BaseModal from '@/components/BaseModal.vue'
+import BaseButton from '@/components/BaseButton.vue'
 
 const route = useRoute()
 const router = useRouter()
+const usersStore = useUsersStore()
 
-const users = ref<User[]>([])
+const { users, total } = storeToRefs(usersStore)
+
 const isLoading = ref(false)
 const error = ref('')
-const total = ref(0)
 const limit = 10
-
 const currentPage = ref(Number(route.query.page) || 1)
 const searchQuery = ref((route.query.q as string) || '')
-
-// Логіка лотереї
 const winners = ref<User[]>([])
 
+const isDeleteModalOpen = ref(false)
+const userToDelete = ref<number | null>(null)
+
 const canPickWinner = computed(() => {
-  if (winners.value.length >= 3) return false // Наприклад, максимум 3 переможці
+  if (winners.value.length >= 3) return false
   const availableParticipants = users.value.filter(
       (u) => !winners.value.some((w) => w.id === u.id)
   )
@@ -43,19 +48,16 @@ const handleRemoveWinner = (id: number) => {
   winners.value = winners.value.filter((w) => w.id !== id)
 }
 
-// Робота з API
 const fetchUsers = async () => {
   isLoading.value = true
   error.value = ''
   try {
     const skip = (currentPage.value - 1) * limit
-    const response = await ServiceProvider.users.getAll({
+    await usersStore.fetchUsers({
       limit,
       skip,
       q: searchQuery.value
     })
-    users.value = response.items
-    total.value = response.total
   } catch (e: any) {
     error.value = e.message
   } finally {
@@ -83,14 +85,23 @@ const changePage = (step: number) => {
   updateUrl()
 }
 
-const deleteUser = async (id: number) => {
-  if (!confirm('Видалити користувача?')) return
+const openDeleteModal = (id: number) => {
+  userToDelete.value = id
+  isDeleteModalOpen.value = true
+}
+
+const confirmDelete = async () => {
+  if (userToDelete.value === null) return
+
   try {
-    await ServiceProvider.users.delete(id)
-    users.value = users.value.filter(u => u.id !== id)
-    winners.value = winners.value.filter(w => w.id !== id) // Видаляємо і з переможців
+    await usersStore.deleteUser(userToDelete.value)
+    winners.value = winners.value.filter(w => w.id !== userToDelete.value)
+    await fetchUsers()
   } catch (e: any) {
-    alert(e.message)
+    error.value = e.message
+  } finally {
+    isDeleteModalOpen.value = false
+    userToDelete.value = null
   }
 }
 
@@ -105,8 +116,6 @@ onMounted(fetchUsers)
 
 <template>
   <div class="users-page card-custom">
-
-    <!-- Блок розіграшу лотереї -->
     <WinnerBlock
         :winners="winners"
         :can-pick-winner="canPickWinner"
@@ -116,7 +125,8 @@ onMounted(fetchUsers)
 
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;" />
 
-    <h2>Учасники (Користувачі)</h2>
+    <h2>Користувачі</h2>
+
     <div class="controls">
       <input
           v-model="searchQuery"
@@ -125,7 +135,7 @@ onMounted(fetchUsers)
           class="search-input"
       />
       <button @click="handleSearch" class="btn-primary">Шукати</button>
-      <RouterLink to="/users/new/edit" class="btn-primary" style="text-decoration: none;">Додати учасника</RouterLink>
+      <RouterLink to="/users/new" class="btn-primary" style="text-decoration: none;">Додати нового</RouterLink>
     </div>
 
     <div v-if="isLoading">Завантаження...</div>
@@ -148,7 +158,7 @@ onMounted(fetchUsers)
         <td>
           <RouterLink :to="`/users/${user.id}`" class="btn-secondary">Перегляд</RouterLink>
           <RouterLink :to="`/users/${user.id}/edit`" class="btn-secondary">Редагувати</RouterLink>
-          <button @click="deleteUser(user.id)" class="btn-danger">Видалити</button>
+          <button @click="openDeleteModal(user.id)" class="btn-danger">Видалити</button>
         </td>
       </tr>
       </tbody>
@@ -157,18 +167,74 @@ onMounted(fetchUsers)
     <div class="pagination" v-if="!isLoading && !error">
       <button :disabled="currentPage === 1" @click="changePage(-1)">Попередня</button>
       <span>Сторінка {{ currentPage }}</span>
-      <button :disabled="users.length < limit" @click="changePage(1)">Наступна</button>
+      <button :disabled="currentPage * limit >= total" @click="changePage(1)">Наступна</button>
     </div>
+
+    <BaseModal
+        :is-open="isDeleteModalOpen"
+        title="Підтвердження видалення"
+        @close="isDeleteModalOpen = false"
+    >
+      <p>Ви дійсно хочете видалити цього користувача? Цю дію неможливо скасувати.</p>
+
+      <template #footer>
+        <BaseButton variant="secondary" @click="isDeleteModalOpen = false">
+          Скасувати
+        </BaseButton>
+        <BaseButton variant="danger" @click="confirmDelete">
+          Видалити
+        </BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <style scoped>
-.controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center;}
-.search-input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; flex-grow: 1;}
-.pagination { display: flex; gap: 15px; align-items: center; margin-top: 20px; justify-content: center; }
-.btn-secondary, .btn-danger { padding: 4px 8px; margin-right: 5px; text-decoration: none; border-radius: 4px; font-size: 12px; cursor: pointer; }
-.btn-secondary { background: #e0e0e0; color: #333; }
-.btn-danger { background: #d63131; color: white; border: none; }
-.btn-primary { padding: 8px 16px; background-color: #ec934b; color: white; border: none; border-radius: 4px; cursor: pointer; }
-.error { color: red; }
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.search-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+.pagination {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: 20px;
+  justify-content: center;
+}
+.btn-secondary, .btn-danger {
+  padding: 4px 8px;
+  margin-right: 5px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.btn-secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+.btn-danger {
+  background: #d63131;
+  color: white;
+  border: none;
+}
+.btn-primary {
+  padding: 8px 16px;
+  background-color: #ec934b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.error {
+  color: red;
+}
 </style>

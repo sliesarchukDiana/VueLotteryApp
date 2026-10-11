@@ -122,7 +122,6 @@ onUnmounted(() => {
   border-top: 1px solid #edf2f7;
 }
 
-/* CSS Transition */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;
