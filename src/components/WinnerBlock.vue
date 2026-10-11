@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '@/types/user';
+import type { User } from '../types/user';
 import WinnerBadge from './WinnerBadge.vue';
 import BaseButton from './BaseButton.vue';
 

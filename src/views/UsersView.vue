@@ -2,12 +2,12 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useUsersStore } from '@/stores/users'
-import type { User } from '@/types/user'
+import { useUsersStore } from '../stores/users'
+import type { User } from '../types/user'
 
-import WinnerBlock from '@/components/WinnerBlock.vue'
-import BaseModal from '@/components/BaseModal.vue'
-import BaseButton from '@/components/BaseButton.vue'
+import WinnerBlock from '../components/WinnerBlock.vue'
+import BaseModal from '../components/BaseModal.vue'
+import BaseButton from '../components/BaseButton.vue'
 
 const route = useRoute()
 const router = useRouter()

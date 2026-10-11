@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
+    "baseUrl": "./vue-lottery-app",
     "paths": {
       "@/*": ["./src/*"]
     }

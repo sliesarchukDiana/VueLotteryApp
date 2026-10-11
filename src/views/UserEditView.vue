@@ -4,10 +4,10 @@ import { useRouter } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
-import { ServiceProvider } from '@/services/service-provider'
-import { useUsersStore } from '@/stores/users'
-import BaseInput from '@/components/BaseInput.vue'
-import BaseButton from '@/components/BaseButton.vue'
+import { ServiceProvider } from '../services/service-provider'
+import { useUsersStore } from '../stores/users'
+import BaseInput from '../components/BaseInput.vue'
+import BaseButton from '../components/BaseButton.vue'
 
 const props = defineProps<{ id?: string }>()
 const router = useRouter()
