@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  modelValue: string;
+  modelValue: string | number;
   label?: string;
   placeholder?: string;
   type?: string;
@@ -11,7 +11,7 @@ interface Props {
 defineProps<Props>();
 
 defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (e: 'update:modelValue', value: string | number): void;
 }>();
 </script>
 
@@ -20,15 +20,14 @@ defineEmits<{
     <label v-if="label" class="input-label">{{ label }}</label>
     <div class="input-wrapper">
       <input
-        :type="type || 'text'"
-        :value="modelValue"
-        :placeholder="placeholder"
-        class="form-field"
-        :class="{
-          'is-invalid': !!errorMessage,
-          'is-valid': isValid && !errorMessage
-        }"
-        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+          :type="type || 'text'"
+          :value="modelValue"
+          :placeholder="placeholder"
+          class="form-field"
+          :class="{
+            'is-invalid': !!errorMessage,
+            'is-valid': isValid && !errorMessage}"
+          @input="$emit('update:modelValue', type === 'number' ? Number(($event.target as HTMLInputElement).value) : ($event.target as HTMLInputElement).value)"
       />
       <span v-if="isValid && !errorMessage" class="valid-icon">✓</span>
     </div>

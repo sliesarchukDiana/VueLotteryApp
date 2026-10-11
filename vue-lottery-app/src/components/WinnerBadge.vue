@@ -1,26 +1,14 @@
 <script setup lang="ts">
-import type { Participant } from '@/types/participant';
+import type { User } from '@/types/user';
 
-defineProps<{
-  winner: Participant;
-}>();
-
-defineEmits<{
-  (e: 'remove', id: string): void;
-}>();
+defineProps<{ winner: User }>();
+defineEmits<{ (e: 'remove', id: number): void }>();
 </script>
 
 <template>
   <span class="winner-badge">
-    <span class="winner-name">{{ winner.name }}</span>
-    <button
-      type="button"
-      class="remove-btn"
-      title="Видалити"
-      @click="$emit('remove', winner.id)"
-    >
-      &times;
-    </button>
+    <span class="winner-name">{{ winner.firstName }} {{ winner.lastName }}</span>
+    <button type="button" class="remove-btn" @click="$emit('remove', winner.id)">&times;</button>
   </span>
 </template>
 
