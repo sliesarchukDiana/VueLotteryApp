@@ -114,9 +114,9 @@ onMounted(fetchUsers)
       </template>
       <template #actions="{ item }">
         <div class="action-buttons">
-          <AppButton label="Пер." severity="info" @click="router.push(`/users/${item.id}`)" />
-          <AppButton label="Ред." severity="secondary" @click="router.push(`/users/${item.id}/edit`)" />
-          <AppButton label="Вид." severity="danger" @click="openDeleteModal(item.id)" />
+          <AppButton label="Деталі" severity="info" @click="router.push(`/users/${item.id}`)" />
+          <AppButton label="Редагувати" severity="secondary" @click="router.push(`/users/${item.id}/edit`)" />
+          <AppButton label="Видалити" severity="danger" @click="openDeleteModal(item.id)" />
         </div>
       </template>
     </AppTable>

@@ -58,9 +58,6 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
-/* =========================================
-   PrimeVue Overrides
-   ========================================= */
 .p-button {
   border-radius: var(--radius-md) !important;
   font-weight: 500 !important;
@@ -92,7 +89,6 @@ h2 {
   }
 }
 
-/* Custom Table Styles for PrimeVue DataTable */
 .p-datatable {
   .p-datatable-header {
     background: var(--card-bg);
@@ -127,9 +123,6 @@ h2 {
   background: rgba(0,0,0,0.2);
 }
 
-/* =========================================
-   Header & Nav
-   ========================================= */
 .app-header, nav.nav-links {
   display: flex;
   align-items: center;
@@ -162,4 +155,93 @@ h2 {
     background: var(--border-color);
     transform: translateY(-1px);
   }
+}
+
+.p-dialog {
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid var(--border-color) !important;
+  overflow: hidden;
+}
+
+.p-dialog .p-dialog-header {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.p-dialog .p-dialog-content {
+  background: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  padding: 1.5rem !important;
+}
+
+.p-dialog .p-dialog-footer {
+  background: var(--card-bg) !important;
+  border-top: 1px solid var(--border-color) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.p-dialog-mask {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(4px);
+}
+
+.p-toast {
+  opacity: 0.95;
+}
+
+.p-toast .p-toast-message {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
+  color: var(--text-color) !important;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.p-toast .p-toast-message .p-toast-message-content {
+  padding: 1rem 1.25rem !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+  border-left: 6px solid #22c55e !important;
+}
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon {
+  color: #22c55e !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  border-left: 6px solid #ef4444 !important;
+}
+.p-toast .p-toast-message.p-toast-message-error .p-toast-message-icon {
+  color: #ef4444 !important;
+}
+
+.p-toast .p-toast-summary {
+  font-weight: 600 !important;
+  font-size: 1.05rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.p-toast .p-toast-detail {
+  color: var(--text-muted) !important;
+  font-size: 0.9rem !important;
+  margin: 0 !important;
+}
+
+.p-toast .p-toast-icon-close {
+  color: var(--text-muted) !important;
+  transition: var(--transition) !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  border-radius: 50% !important;
+}
+
+.p-toast .p-toast-icon-close:hover {
+  background: var(--bg-color) !important;
+  color: var(--text-color) !important;
 }
