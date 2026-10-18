@@ -137,7 +137,7 @@ onMounted(fetchUsers)
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: flex-start; }
 .search-input { flex-grow: 1; }
 .action-buttons { display: flex; gap: 5px; }

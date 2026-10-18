@@ -28,8 +28,9 @@ defineProps<{
         :field="col.field"
         :header="col.header"
     >
-      <template #body="{ data }" v-if="$slots[col.field]">
-        <slot :name="col.field" :item="data" />
+      <template #body="{ data }">
+        <slot v-if="$slots[col.field]" :name="col.field" :item="data" />
+        <span v-else>{{ data[col.field] }}</span>
       </template>
     </Column>
 

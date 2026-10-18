@@ -23,14 +23,10 @@ const handleLogout = () => {
   </nav>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .nav-links {
   display: flex;
   gap: 1rem;
-}
-.active-link {
-  font-weight: bold;
-  color: #c85e06;
 }
 .logout-btn {
   cursor: pointer;

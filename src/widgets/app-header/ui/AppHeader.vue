@@ -14,16 +14,3 @@ const themeStore = useThemeStore()
     </button>
   </nav>
 </template>
-
-
-<style scoped>
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: #fff;
-  border-bottom: 1px solid #e1e4e8;
-  margin-bottom: 2rem;
-}
-</style>

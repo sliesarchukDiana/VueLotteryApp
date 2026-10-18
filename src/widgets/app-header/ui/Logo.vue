@@ -8,7 +8,7 @@ import { RouterLink } from 'vue-router'
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .logo a {
   font-weight: 700;
   font-size: 1.2rem;
