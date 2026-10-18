@@ -1,0 +1,1 @@
+export { default as UserDetailsView } from './ui/UserDetailsView.vue';

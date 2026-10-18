@@ -1,0 +1,1 @@
+export { default as WinnerBlock } from './ui/WinnerBlock.vue';
