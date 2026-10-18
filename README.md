@@ -1,72 +1,27 @@
-# Vue Lottery App
-A modern web application built with Vue 3 and TypeScript for managing lottery participants, validating entries, and drawing winners.
+# VueLotteryApp
 
-## Features
-* **Participant Registration:** Add new participants using a dedicated registration form (`RegisterForm.vue`) with built-in input validation (`useValidation.ts`).
-* **Participant Management:** View and manage registered users in a structured data table (`ParticipantTable.vue`).
-* **Search Functionality:** Quickly find specific participants using the search bar (`SearchBar.vue`).
-* **Winner Selection:** Highlight and display lottery winners using dedicated UI components (`WinnerBlock.vue`, `WinnerBadge.vue`).
-* **Reusable UI Components:** Utilizes modular base components for consistent styling across the app (`BaseButton.vue`, `BaseInput.vue`, `BaseModal.vue`).
+Веб-застосунок для лотереї, розроблений з використанням Vue 3, Vite та TypeScript. Проєкт включає систему автентифікації, управління користувачами та компоненти для відображення переможців.
 
+## Основний функціонал
+* **Автентифікація:** Вхід до системи та управління сесіями (реалізовано через `LoginView` та `auth.service.ts`).
+* **Управління користувачами:** Перегляд списку користувачів, їх деталей та редагування профілів (`UsersView`, `UserDetailsView`, `UserEditView`)[cite: 1].
+* **Відображення результатів:** Спеціальні UI-компоненти для показу переможців (`WinnerBadge`, `WinnerBlock`)[cite: 1].
+* **API Інтеграція:** Налаштований HTTP-клієнт для взаємодії з бекендом (`http-client.ts`)[cite: 1].
+* **Управління станом:** Глобальні сховища для даних користувачів та авторизації (директорія `stores`)[cite: 1].
 
+## Технологічний стек
+* Фреймворк: **Vue 3**[cite: 1]
+* Збирач: **Vite**[cite: 1]
+* Мова програмування: **TypeScript**[cite: 1]
+* Маршрутизація: **Vue Router**[cite: 1]
+* Стилізація: **SCSS**[cite: 1]
+* Контроль якості коду: **ESLint** (`.eslintrc.cjs`)[cite: 1]
 
-## Tech Stack
-This project leverages the following frontend technologies:
-* **Framework:** Vue 3
-* **Language:** TypeScript (`tsconfig.json`)
-* **Build Tool:** Vite (`vite.config.ts`)
-* **Styling:** SCSS (`style.scss`)
-* **Linting & Formatting:** ESLint (`.eslintrc.cjs`)
-
-
-
-## Project Structure
-
-The application follows a modular, component-based architecture:
-* `src/components/` - Contains all reusable UI and feature-specific components (Buttons, Modals, Tables, Forms).
-* `src/composables/` - Houses reusable Vue Composition API logic.
-* `src/types/` - Contains TypeScript interfaces and data models (e.g., `participant.ts`).
-* `src/App.vue` - The root application component.
-* `src/main.ts` - The main application entry point.
-
-
-
-## Setup and Installation
-
-Follow these steps to run the project locally.
-
-### Prerequisites
-Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
-
-### Installation
-1. Clone the repository and navigate to the project directory:
-```bash
-cd vue-lottery-app
-
-```
-
-2. Install the project dependencies utilizing `package-lock.json`:
-
-```bash
-npm install
-
-```
-
-
-
-### Development Server
-To start the local Vite development server, run:
-
-```bash
-npm run dev
-
-```
-
-### Production Build
-
-To compile and minify the application for production environments, run:
-
-```bash
-npm run build
-
-```
+## Структура директорій
+* `src/api/` — конфігурація HTTP-клієнта[cite: 1].
+* `src/components/` — базові та специфічні UI-компоненти (кнопки, поля вводу, модальні вікна)[cite: 1].
+* `src/layouts/` — макети сторінок (авторизація, стандартний макет, макет користувачів)[cite: 1].
+* `src/router/` — конфігурація маршрутів[cite: 1].
+* `src/services/` — сервіси для бізнес-логіки та роботи з даними[cite: 1].
+* `src/stores/` — модулі управління станом застосунку[cite: 1].
+* `src/views/` — основні сторінки (Home, About, Login, Users, NotFound тощо)[cite: 1].
