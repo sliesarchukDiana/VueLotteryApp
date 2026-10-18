@@ -2,17 +2,14 @@
 import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useUsersStore } from '../../entities/user/users'
-import type { User } from '../../entities/user/user'
 
-import WinnerBlock from '../../entities/user/ui/WinnerBlock.vue'
-import BaseModal from '../../shared/ui/BaseModal.vue'
-import BaseButton from '../../shared/ui/BaseButton.vue'
+import { useUsersStore, WinnerBlock } from '@/entities/user'
+import type { User } from '@/entities/user'
+import { AppTable, AppConfirmDialog, AppButton, AppInput } from '@/shared/ui'
 
 const route = useRoute()
 const router = useRouter()
 const usersStore = useUsersStore()
-
 const { users, total } = storeToRefs(usersStore)
 
 const isLoading = ref(false)
@@ -20,10 +17,16 @@ const error = ref('')
 const limit = 10
 const currentPage = ref(Number(route.query.page) || 1)
 const searchQuery = ref((route.query.q as string) || '')
-const winners = ref<User[]>([])
 
+const winners = ref<User[]>([])
 const isDeleteModalOpen = ref(false)
 const userToDelete = ref<number | null>(null)
+
+const tableColumns = [
+  { field: 'id', header: 'ID' },
+  { field: 'fullName', header: 'Ім\'я' },
+  { field: 'email', header: 'Email' }
+]
 
 const canPickWinner = computed(() => {
   if (winners.value.length >= 3) return false
@@ -53,11 +56,7 @@ const fetchUsers = async () => {
   error.value = ''
   try {
     const skip = (currentPage.value - 1) * limit
-    await usersStore.fetchUsers({
-      limit,
-      skip,
-      q: searchQuery.value
-    })
+    await usersStore.fetchUsers({ limit, skip, q: searchQuery.value })
   } catch (e: any) {
     error.value = e.message
   } finally {
@@ -92,7 +91,6 @@ const openDeleteModal = (id: number) => {
 
 const confirmDelete = async () => {
   if (userToDelete.value === null) return
-
   try {
     await usersStore.deleteUser(userToDelete.value)
     winners.value = winners.value.filter(w => w.id !== userToDelete.value)
@@ -122,70 +120,54 @@ onMounted(fetchUsers)
         @pick-winner="handlePickWinner"
         @remove-winner="handleRemoveWinner"
     />
-
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;" />
-
     <h2>Користувачі</h2>
 
     <div class="controls">
-      <input
+      <AppInput
           v-model="searchQuery"
           @keyup.enter="handleSearch"
           placeholder="Пошук..."
           class="search-input"
       />
-      <button @click="handleSearch" class="btn-primary">Шукати</button>
-      <RouterLink to="/users/new" class="btn-primary" style="text-decoration: none;">Додати нового</RouterLink>
+      <AppButton label="Знайти" @click="handleSearch" />
+      <AppButton label="Створити" severity="success" @click="router.push('/users/new')" />
     </div>
 
-    <div v-if="isLoading">Завантаження...</div>
-    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-if="error" class="error">{{ error }}</div>
 
-    <table v-else class="table custom-table">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Ім'я</th>
-        <th>Email</th>
-        <th>Дії</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.id }}</td>
-        <td>{{ user.firstName }} {{ user.lastName }}</td>
-        <td>{{ user.email }}</td>
-        <td>
-          <RouterLink :to="`/users/${user.id}`" class="btn-secondary">Перегляд</RouterLink>
-          <RouterLink :to="`/users/${user.id}/edit`" class="btn-secondary">Редагувати</RouterLink>
-          <button @click="openDeleteModal(user.id)" class="btn-danger">Видалити</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <AppTable
+        v-if="!error"
+        :value="users"
+        :columns="tableColumns"
+        :loading="isLoading"
+    >
+      <template #fullName="{ item }">
+        {{ item.firstName }} {{ item.lastName }}
+      </template>
+
+      <template #actions="{ item }">
+        <div class="action-buttons">
+          <AppButton label="Деталі" severity="info" @click="router.push(`/users/${item.id}`)" />
+          <AppButton label="Ред." severity="secondary" @click="router.push(`/users/${item.id}/edit`)" />
+          <AppButton label="Видал." severity="danger" @click="openDeleteModal(item.id)" />
+        </div>
+      </template>
+    </AppTable>
 
     <div class="pagination" v-if="!isLoading && !error">
-      <button :disabled="currentPage === 1" @click="changePage(-1)">Попередня</button>
+      <AppButton label="Назад" :disabled="currentPage === 1" @click="changePage(-1)" />
       <span>Сторінка {{ currentPage }}</span>
-      <button :disabled="currentPage * limit >= total" @click="changePage(1)">Наступна</button>
+      <AppButton label="Вперед" :disabled="currentPage * limit >= total" @click="changePage(1)" />
     </div>
 
-    <BaseModal
+    <AppConfirmDialog
         :is-open="isDeleteModalOpen"
-        title="Підтвердження видалення"
+        title="Видалення користувача"
+        message="Ви дійсно бажаєте видалити цього користувача?"
         @close="isDeleteModalOpen = false"
-    >
-      <p>Ви дійсно хочете видалити цього користувача? Цю дію неможливо скасувати.</p>
-
-      <template #footer>
-        <BaseButton variant="secondary" @click="isDeleteModalOpen = false">
-          Скасувати
-        </BaseButton>
-        <BaseButton variant="danger" @click="confirmDelete">
-          Видалити
-        </BaseButton>
-      </template>
-    </BaseModal>
+        @confirm="confirmDelete"
+    />
   </div>
 </template>
 
@@ -194,13 +176,14 @@ onMounted(fetchUsers)
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  align-items: center;
+  align-items: flex-start;
 }
 .search-input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   flex-grow: 1;
+}
+.action-buttons {
+  display: flex;
+  gap: 5px;
 }
 .pagination {
   display: flex;
@@ -209,32 +192,8 @@ onMounted(fetchUsers)
   margin-top: 20px;
   justify-content: center;
 }
-.btn-secondary, .btn-danger {
-  padding: 4px 8px;
-  margin-right: 5px;
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.btn-secondary {
-  background: #e0e0e0;
-  color: #333;
-}
-.btn-danger {
-  background: #d63131;
-  color: white;
-  border: none;
-}
-.btn-primary {
-  padding: 8px 16px;
-  background-color: #ec934b;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
 .error {
   color: red;
+  margin-bottom: 1rem;
 }
 </style>

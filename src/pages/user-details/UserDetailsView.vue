@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUsersStore } from '../../entities/user/users'
-import type { User } from '../../entities/user/user'
+import { useUsersStore } from '@/entities/user'
+import type { User } from '@/entities/user'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()

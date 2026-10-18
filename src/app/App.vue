@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '../entities/session/auth'
+import { useRoute, RouterView } from 'vue-router'
+import { useAuthStore } from '@/entities/session'
 
 const route = useRoute()
 const authStore = useAuthStore()

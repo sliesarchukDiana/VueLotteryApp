@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { ServiceProvider } from '@/shared/api/service-provider';
-import router from '@/app/providers/router';
+import {defineStore} from 'pinia';
+import {computed, ref} from 'vue';
+import { ServiceProvider } from '@/shared/api';
 
 export const useAuthStore = defineStore('auth', () => {
     const accessToken = ref<string | null>(localStorage.getItem('accessToken'));
@@ -26,21 +25,19 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     const login = async (credentials: Record<string, string>) => {
-        const data = await ServiceProvider.auth.login(credentials);
+        const data = await (ServiceProvider.get<any>('auth')).login(credentials);
         setTokens(data.accessToken, data.refreshToken);
         user.value = data;
     };
 
     const logout = () => {
         clearAuth();
-        router.push({ name: 'login' });
     };
 
     const fetchUser = async () => {
         if (!accessToken.value) return;
         try {
-            const data = await ServiceProvider.auth.getMe();
-            user.value = data;
+            user.value = await (ServiceProvider.get<any>('auth')).getMe();
         } catch (error) {
             clearAuth();
         }

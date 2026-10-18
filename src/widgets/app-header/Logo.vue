@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+</script>
+
 <template>
   <div class="logo">
     <RouterLink to="/">Vue Lottery App</RouterLink>

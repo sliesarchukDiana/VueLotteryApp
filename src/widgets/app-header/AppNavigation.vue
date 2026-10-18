@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { useAuthStore } from '../../entities/session/auth'
+import { useAuthStore } from '@/entities/session'
 import { storeToRefs } from 'pinia'
+import { useRouter, RouterLink } from 'vue-router'
 
+const router = useRouter()
 const authStore = useAuthStore()
 const { isAuthenticated } = storeToRefs(authStore)
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -12,7 +19,7 @@ const { isAuthenticated } = storeToRefs(authStore)
     <RouterLink to="/about" active-class="active-link">About author</RouterLink>
     <RouterLink v-if="isAuthenticated" to="/users" active-class="active-link">Users</RouterLink>
     <RouterLink v-if="!isAuthenticated" to="/login" active-class="active-link">Login</RouterLink>
-    <a v-else href="#" @click.prevent="authStore.logout" class="logout-btn">Logout</a>
+    <a v-else href="#" @click.prevent="handleLogout" class="logout-btn">Logout</a>
   </nav>
 </template>
 

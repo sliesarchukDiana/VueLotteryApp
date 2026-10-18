@@ -1,10 +1,20 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { AppButton } from '@/shared/ui'
+
+const router = useRouter()
+</script>
+
 <template>
   <div class="not-found card-custom text-center">
     <h2>404 - Сторінка не знайдена</h2>
     <p>Схоже, ви перейшли за невірним посиланням.</p>
-    <RouterLink to="/" class="btn-primary" style="display: inline-block; text-decoration: none; margin-top: 15px;">
-      Повернутися на головну
-    </RouterLink>
+
+    <AppButton
+        label="Повернутися на головну"
+        @click="router.push('/')"
+        style="margin-top: 15px;"
+    />
   </div>
 </template>
 

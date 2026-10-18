@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { User, CreateUserDto, UpdateUserDto } from '@/entities/user/user';
-import { ServiceProvider } from '@/shared/api/service-provider';
+import type { User, CreateUserDto, UpdateUserDto } from './user';
+import { ServiceProvider } from '@/shared/api';
+import type { UserService } from './api/user.service';
 
 export const useUsersStore = defineStore('users', () => {
     const users = ref<User[]>([]);
@@ -11,43 +12,39 @@ export const useUsersStore = defineStore('users', () => {
     const localAdded = ref<User[]>([]);
     const localDeleted = ref<Set<number>>(new Set());
 
-    const fetchUsers = async (params: { limit?: number; skip?: number; q?: string }) => {
-        const response = await ServiceProvider.users.getAll(params);
+    const service = () => ServiceProvider.get<UserService>('users');
 
+    const fetchUsers = async (params: { limit?: number; skip?: number; q?: string }) => {
+        const response = await service().getAll(params);
         let fetchedItems = response.items
-            .filter(u => !localDeleted.value.has(u.id))
-            .map(u => localUpdated.value[u.id] || u);
+            .filter((u: User) => !localDeleted.value.has(u.id))
+            .map((u: User) => localUpdated.value[u.id] || u);
 
         if ((!params.skip || params.skip === 0) && !params.q) {
             fetchedItems = [...localAdded.value, ...fetchedItems];
         }
-
         users.value = fetchedItems;
         total.value = response.total;
     };
 
     const getUserById = async (id: number) => {
-        if (localUpdated.value[id]) {
-            return localUpdated.value[id];
-        }
-        return await ServiceProvider.users.getById(id);
+        if (localUpdated.value[id]) return localUpdated.value[id];
+        return await service().getById(id);
     };
 
     const addUser = async (userData: CreateUserDto) => {
-        const newUser = await ServiceProvider.users.create(userData);
+        const newUser = await service().create(userData);
         localAdded.value.unshift(newUser);
     };
 
     const updateUser = async (id: number, userData: UpdateUserDto) => {
-        const updatedUser = await ServiceProvider.users.update(id, userData);
-
-        const currentUser = localUpdated.value[id] || users.value.find(u => u.id === id);
-
+        const updatedUser = await service().update(id, userData);
+        const currentUser = localUpdated.value[id] || users.value.find((u: User) => u.id === id);
         localUpdated.value[id] = { ...currentUser, ...updatedUser } as User;
     };
 
     const deleteUser = async (id: number) => {
-        await ServiceProvider.users.delete(id);
+        await service().delete(id);
         localDeleted.value.add(id);
     };
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { User } from '../user';
 import WinnerBadge from './WinnerBadge.vue';
-import BaseButton from '../../../shared/ui/BaseButton.vue';
+import { AppButton } from '@/shared/ui';
 
 defineProps<{
   winners: User[];
@@ -29,14 +29,14 @@ defineEmits<{
   <span v-else class="placeholder-text">Winners</span>
 </div>
 
-      <BaseButton
+      <AppButton
         type="button"
         variant="primary"
         :disabled="!canPickWinner"
         @click="$emit('pick-winner')"
       >
         New winner
-      </BaseButton>
+      </AppButton>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 import UsersLayout from '@/pages/users/UsersLayout.vue';
 import {createRouter, createWebHashHistory} from 'vue-router'
-import { useAuthStore } from '@/entities/session/auth'
+import { useAuthStore } from '@/entities/session'
 import DefaultLayout from '@/app/layouts/DefaultLayout.vue'
 import AuthLayout from '@/app/layouts/AuthLayout.vue'
 
