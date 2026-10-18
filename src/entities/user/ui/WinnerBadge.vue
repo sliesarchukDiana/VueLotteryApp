@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '../user';
+import type { User } from '../model/user';
 
 defineProps<{ winner: User }>();
 defineEmits<{ (e: 'remove', id: number): void }>();
