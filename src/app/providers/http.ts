@@ -2,11 +2,18 @@ import { useSessionStore } from '@/entities/session';
 import { http, ServiceProvider } from '@/shared/api';
 
 export function setupHttpInterceptors() {
+    http.interceptors.request.use((config) => {
+        const sessionStore = useSessionStore();
+        if (sessionStore.accessToken) {
+            config.headers.Authorization = `Bearer ${sessionStore.accessToken}`;
+        }
+        return config;
+    });
+
     http.interceptors.response.use(
         (response) => response,
         async (error) => {
             const originalRequest = error.config;
-
             if (error.response?.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true;
                 const sessionStore = useSessionStore();
