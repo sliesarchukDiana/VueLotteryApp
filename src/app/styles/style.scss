@@ -63,8 +63,9 @@ h2 {
   font-weight: 500 !important;
   transition: var(--transition) !important;
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.05) !important;
+  padding: 10px !important;
 
-  &:active {
+  &:hover {
     transform: translateY(1px);
   }
 }
@@ -244,4 +245,37 @@ h2 {
 .p-toast .p-toast-icon-close:hover {
   background: var(--bg-color) !important;
   color: var(--text-color) !important;
+}
+
+.p-button {
+  background: transparent !important;
+  border-color: transparent !important;
+
+  &:hover {
+    background: rgba(79, 70, 229, 0.1) !important;
+  }
+}
+
+.p-button.p-button-secondary {
+  color: var(--text-muted) !important;
+
+  &:hover {
+    background: var(--bg-color) !important;
+  }
+}
+
+.p-button.p-button-danger {
+  color: #ef4444 !important;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+  }
+}
+
+.p-button.p-button-info {
+  color: #0ea5e9 !important;
+
+  &:hover {
+    background: rgba(14, 165, 233, 0.1) !important;
+  }
 }
