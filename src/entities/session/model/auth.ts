@@ -1,10 +1,10 @@
-import {defineStore} from 'pinia';
-import {computed, ref} from 'vue';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 import { ServiceProvider } from '@/shared/api';
 
 export const useAuthStore = defineStore('auth', () => {
-    const accessToken = ref<string | null>(localStorage.getItem('accessToken'));
-    const refreshToken = ref<string | null>(localStorage.getItem('refreshToken'));
+    const accessToken = ref<string | null>(null);
+    const refreshToken = ref<string | null>(null);
     const user = ref<any>(null);
 
     const isAuthenticated = computed(() => !!accessToken.value);
@@ -12,16 +12,12 @@ export const useAuthStore = defineStore('auth', () => {
     const setTokens = (access: string, refresh: string) => {
         accessToken.value = access;
         refreshToken.value = refresh;
-        localStorage.setItem('accessToken', access);
-        localStorage.setItem('refreshToken', refresh);
     };
 
     const clearAuth = () => {
         accessToken.value = null;
         refreshToken.value = null;
         user.value = null;
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
     };
 
     const login = async (credentials: Record<string, string>) => {
@@ -47,4 +43,6 @@ export const useAuthStore = defineStore('auth', () => {
         accessToken, refreshToken, user, isAuthenticated,
         login, logout, setTokens, clearAuth, fetchUser
     };
+}, {
+    persist: true
 });

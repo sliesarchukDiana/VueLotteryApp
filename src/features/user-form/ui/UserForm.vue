@@ -4,10 +4,11 @@ import { useRouter } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
-import { ServiceProvider } from '@/shared/api'
 import { useUsersStore } from '@/entities/user'
 import { AppInput, AppButton } from '@/shared/ui'
+import { useToast } from 'primevue/usetoast'
 
+const toast = useToast()
 const props = defineProps<{ id?: string }>()
 const router = useRouter()
 const usersStore = useUsersStore()
@@ -48,7 +49,7 @@ onMounted(async () => {
   if (isEditing.value) {
     isLoading.value = true
     try {
-      const data = await ServiceProvider.get<any>('users').getById(Number(props.id))
+      const data = await usersStore.getUserById(Number(props.id))
       setValues(data)
     } catch (e: any) {
       error.value = e.message
@@ -63,12 +64,15 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditing.value) {
       await usersStore.updateUser(Number(props.id), values)
+      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача оновлено', life: 3000 })
     } else {
       await usersStore.addUser(values)
+      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача створено', life: 3000 })
     }
     router.push('/users')
   } catch (e: any) {
     error.value = e.message
+    toast.add({ severity: 'error', summary: 'Помилка', detail: e.message, life: 3000 })
   } finally {
     isLoading.value = false
   }

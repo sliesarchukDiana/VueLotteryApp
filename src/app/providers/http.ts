@@ -1,6 +1,5 @@
-import { http } from '@/shared/api/http-client';
 import { useAuthStore } from '@/entities/session';
-import { ServiceProvider } from '@/shared/api/service-provider';
+import { http, ServiceProvider } from '@/shared/api';
 
 export function setupHttpInterceptors() {
     http.interceptors.response.use(

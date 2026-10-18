@@ -1,6 +1,6 @@
-import { ServiceProvider } from '@/shared/api/service-provider';
-import { UserService } from '@/entities/user/api/user.service';
-import { AuthService } from '@/features/auth/auth.service';
+import { ServiceProvider } from '@/shared/api';
+import { UserService } from '@/entities/user';
+import { AuthService } from '@/features/auth';
 
 export function registerServices(): void {
     ServiceProvider.register('users', () => new UserService());

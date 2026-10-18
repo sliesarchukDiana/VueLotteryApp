@@ -1,4 +1,4 @@
-import UsersLayout from '@/pages/users/UsersLayout.vue';
+import { UsersLayout } from '@/pages/users';
 import {createRouter, createWebHashHistory} from 'vue-router'
 import { useAuthStore } from '@/entities/session'
 import DefaultLayout from '@/app/layouts/DefaultLayout.vue'
@@ -10,13 +10,13 @@ const router = createRouter({
         {
             path: '/',
             name: 'home',
-            component: () => import('@/pages/home/HomeView.vue'),
+            component: () => import('@/pages/home/ui/HomeView.vue'),
             meta: { layout: DefaultLayout, title: 'Головна' }
         },
         {
             path: '/about',
             name: 'about',
-            component: () => import('@/pages/about/AboutView.vue'),
+            component: () => import('@/pages/about/ui/AboutView.vue'),
             meta: { layout: DefaultLayout, title: 'Про автора' }
         },
         {
@@ -27,26 +27,26 @@ const router = createRouter({
                 {
                     path: '',
                     name: 'users',
-                    component: () => import('@/pages/users/UsersView.vue'),
+                    component: () => import('@/pages/users/ui/UsersView.vue'),
                     meta: { title: 'Користувачі' }
                 },
                 {
                     path: 'new',
                     name: 'user-create',
-                    component: () => import('@/pages/user-edit/UserEditView.vue'),
+                    component: () => import('@/pages/user-edit/ui/UserEditView.vue'),
                     meta: { title: 'Створення користувача' }
                 },
                 {
                     path: ':id',
                     name: 'user-details',
-                    component: () => import('@/pages/user-details/UserDetailsView.vue'),
+                    component: () => import('@/pages/user-details/ui/UserDetailsView.vue'),
                     props: true,
                     meta: { title: 'Деталі користувача' }
                 },
                 {
                     path: ':id/edit',
                     name: 'user-edit',
-                    component: () => import('@/pages/user-edit/UserEditView.vue'),
+                    component: () => import('@/pages/user-edit/ui/UserEditView.vue'),
                     props: true,
                     meta: { title: 'Редагування користувача' }
                 }
@@ -55,13 +55,13 @@ const router = createRouter({
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/pages/login/LoginView.vue'),
+            component: () => import('@/pages/login/ui/LoginView.vue'),
             meta: { layout: AuthLayout, title: 'Авторизація' }
         },
         {
             path: '/:pathMatch(.*)*',
             name: 'not-found',
-            component: () => import('@/pages/not-found/NotFoundView.vue'),
+            component: () => import('@/pages/not-found/ui/NotFoundView.vue'),
             meta: { layout: DefaultLayout, title: 'Сторінка не знайдена' }
         }
     ]

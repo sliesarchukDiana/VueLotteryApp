@@ -1,4 +1,4 @@
-import { http } from '@/shared/api/http-client';
+import { http } from '@/shared/api';
 
 export class AuthService {
     async login(credentials: Record<string, string>) {
