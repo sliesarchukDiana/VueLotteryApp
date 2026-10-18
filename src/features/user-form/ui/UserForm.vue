@@ -6,10 +6,9 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/entities/user'
-import { AppInput, AppButton } from '@/shared/ui'
-import { useToast } from 'primevue/usetoast'
+import { AppInput, AppButton, useNotification } from '@/shared/ui'
 
-const toast = useToast()
+const notification = useNotification()
 const props = defineProps<{ id?: string }>()
 const router = useRouter()
 
@@ -50,8 +49,7 @@ onMounted(async () => {
     try {
       const data = await usersStore.getUserById(Number(props.id))
       setValues(data)
-    } catch (e: any) {
-    }
+    } catch (e: any) { /* empty */ }
   }
 })
 
@@ -59,14 +57,14 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditing.value) {
       await usersStore.updateUser(Number(props.id), values)
-      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача оновлено', life: 3000 })
+      notification.success('Успіх', 'Користувача оновлено')
     } else {
       await usersStore.addUser(values)
-      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача створено', life: 3000 })
+      notification.success('Успіх', 'Користувача створено')
     }
     router.push('/users')
   } catch (e: any) {
-    toast.add({ severity: 'error', summary: 'Помилка', detail: e.message || 'Сталася помилка', life: 3000 })
+    notification.error('Помилка', e.message || 'Щось пішло не так')
   }
 })
 </script>

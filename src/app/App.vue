@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import { useRoute, RouterView } from 'vue-router'
 import { useAuthStore } from '@/entities/session'
-import Toast from 'primevue/toast' // Додано
+import { AppToast } from '@/shared/ui'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -16,5 +16,5 @@ onMounted(() => {
   <component :is="route.meta.layout || 'div'">
     <RouterView />
   </component>
-  <Toast />
+  <AppToast />
 </template>
