@@ -5,10 +5,9 @@ import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useUsersStore } from '@/entities/user'
-import { AppInput, AppButton } from '@/shared/ui'
-import { useToast } from 'primevue/usetoast'
+import { AppInput, AppButton, useNotification } from '@/shared/ui'
 
-const toast = useToast()
+const notify = useNotification()
 const props = defineProps<{ id?: string }>()
 const router = useRouter()
 const usersStore = useUsersStore()
@@ -64,15 +63,15 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditing.value) {
       await usersStore.updateUser(Number(props.id), values)
-      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача оновлено', life: 3000 })
+      notify.success('Успіх', 'Користувача оновлено')
     } else {
       await usersStore.addUser(values)
-      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача створено', life: 3000 })
+      notify.success('Успіх', 'Користувача створено')
     }
     router.push('/users')
   } catch (e: any) {
     error.value = e.message
-    toast.add({ severity: 'error', summary: 'Помилка', detail: e.message, life: 3000 })
+    notify.error('Помилка', e.message)
   } finally {
     isLoading.value = false
   }
