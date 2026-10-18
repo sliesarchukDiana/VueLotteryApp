@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { User, CreateUserDto, UpdateUserDto } from './user';
 import { ServiceProvider } from '@/shared/api';
-import type { UserService } from '@/entities/user';
+import type { UserService } from '../api/user.service';
 
 export const useUsersStore = defineStore('users', () => {
     const users = ref<User[]>([]);

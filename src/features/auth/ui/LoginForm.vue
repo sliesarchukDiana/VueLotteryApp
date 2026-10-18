@@ -4,12 +4,12 @@ import { useRouter, useRoute } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
-import { useAuthStore } from '@/entities/session'
+import { useSessionStore } from '@/entities/session'
 import { AppInput, AppButton } from '@/shared/ui'
 
 const router = useRouter()
 const route = useRoute()
-const authStore = useAuthStore()
+const sessionStore = useSessionStore()
 
 const isLoading = ref(false)
 const authError = ref('')
@@ -29,7 +29,7 @@ const onSubmit = handleSubmit(async (values) => {
   isLoading.value = true
   authError.value = ''
   try {
-    await authStore.login(values)
+    await sessionStore.login(values)
     const redirectPath = (route.query.redirect as string) || '/users'
     router.push(redirectPath)
   } catch (e: any) {

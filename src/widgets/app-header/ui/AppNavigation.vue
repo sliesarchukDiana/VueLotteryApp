@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/entities/session'
+import { useSessionStore } from '@/entities/session'
 import { storeToRefs } from 'pinia'
 import { useRouter, RouterLink } from 'vue-router'
 
 const router = useRouter()
-const authStore = useAuthStore()
-const { isAuthenticated } = storeToRefs(authStore)
+const sessionStore = useSessionStore()
+const { isAuthenticated } = storeToRefs(sessionStore)
 
 const handleLogout = () => {
-  authStore.logout()
+  sessionStore.logout()
   router.push('/login')
 }
 </script>

@@ -4,10 +4,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/entities/user'
 import { AppTable, AppConfirmDialog, AppButton, AppInput } from '@/shared/ui'
+import { useNotification } from '@/shared/ui';
 
 const emit = defineEmits<{ (e: 'user-deleted', id: number): void }>()
 const route = useRoute()
 const router = useRouter()
+const notification = useNotification();
 
 const usersStore = useUsersStore()
 const { users, total, isLoading, error } = storeToRefs(usersStore)
@@ -61,8 +63,11 @@ const confirmDelete = async () => {
   try {
     await usersStore.deleteUser(userToDelete.value)
     emit('user-deleted', userToDelete.value)
+    notification.success('Успіх', 'Користувача видалено')
     await fetchUsers()
-  } catch (e) { /* empty */ } finally {
+  } catch (e: any) {
+    notification.error('Помилка', e.message || 'Не вдалося видалити користувача')
+  } finally {
     isDeleteModalOpen.value = false
     userToDelete.value = null
   }

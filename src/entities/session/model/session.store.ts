@@ -1,48 +1,47 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { ServiceProvider } from '@/shared/api';
+import type { AuthService } from '../api/auth.service';
 
-export const useAuthStore = defineStore('auth', () => {
+export const useSessionStore = defineStore('session', () => {
     const accessToken = ref<string | null>(null);
     const refreshToken = ref<string | null>(null);
     const user = ref<any>(null);
 
     const isAuthenticated = computed(() => !!accessToken.value);
 
-    const setTokens = (access: string, refresh: string) => {
+    const setSession = (access: string, refresh: string) => {
         accessToken.value = access;
         refreshToken.value = refresh;
     };
 
-    const clearAuth = () => {
+    const clearSession = () => {
         accessToken.value = null;
         refreshToken.value = null;
         user.value = null;
     };
 
     const login = async (credentials: Record<string, string>) => {
-        const data = await (ServiceProvider.get<any>('auth')).login(credentials);
-        setTokens(data.accessToken, data.refreshToken);
+        const data = await (ServiceProvider.get<AuthService>('auth')).login(credentials);
+        setSession(data.accessToken, data.refreshToken);
         user.value = data;
     };
 
     const logout = () => {
-        clearAuth();
+        clearSession();
     };
 
     const fetchUser = async () => {
         if (!accessToken.value) return;
         try {
-            user.value = await (ServiceProvider.get<any>('auth')).getMe();
+            user.value = await (ServiceProvider.get<AuthService>('auth')).getMe();
         } catch (error) {
-            clearAuth();
+            clearSession();
         }
     };
 
     return {
         accessToken, refreshToken, user, isAuthenticated,
-        login, logout, setTokens, clearAuth, fetchUser
+        login, logout, setSession, clearSession, fetchUser
     };
-}, {
-    persist: true
-});
+}, { persist: true });

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useUsersStore, WinnerBlock } from '@/entities/user'
+import { useUsersStore } from '@/entities/user'
+import { WinnerBlock } from '@/features/lottery'
 import type { User } from '@/entities/user'
 import { UsersTable } from '@/widgets/users-table'
 

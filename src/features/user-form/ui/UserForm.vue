@@ -49,7 +49,9 @@ onMounted(async () => {
     try {
       const data = await usersStore.getUserById(Number(props.id))
       setValues(data)
-    } catch (e: any) { /* empty */ }
+    } catch (e: any) {
+      notification.error('Помилка', e.message || 'Не вдалося завантажити дані користувача для редагування')
+    }
   }
 })
 

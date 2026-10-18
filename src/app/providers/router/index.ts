@@ -1,5 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
-import { useAuthStore } from '@/entities/session'
+import { useSessionStore } from '@/entities/session'
 import { UsersLayout } from '@/pages/users'
 import DefaultLayout from '@/app/layouts/DefaultLayout.vue'
 import AuthLayout from '@/app/layouts/AuthLayout.vue'
@@ -68,11 +68,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-    const auth = useAuthStore()
-
-    if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    const session = useSessionStore()
+    if (to.meta.requiresAuth && !session.isAuthenticated) {
         next({ name: 'login', query: { redirect: to.fullPath } })
-    } else if (to.name === 'login' && auth.isAuthenticated) {
+    } else if (to.name === 'login' && session.isAuthenticated) {
         next({ name: 'users' })
     } else {
         next()

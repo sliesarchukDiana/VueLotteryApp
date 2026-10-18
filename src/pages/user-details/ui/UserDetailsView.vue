@@ -4,12 +4,12 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/entities/user'
 import type { User } from '@/entities/user'
-import { AppButton } from '@/shared/ui'
+import { AppButton, useNotification } from '@/shared/ui'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
-
 const usersStore = useUsersStore()
+const notification = useNotification()
 const { isLoading, error } = storeToRefs(usersStore)
 
 const user = ref<User | null>(null)
@@ -17,7 +17,9 @@ const user = ref<User | null>(null)
 onMounted(async () => {
   try {
     user.value = await usersStore.getUserById(Number(props.id))
-  } catch (e) { /* something went wrong */ }
+  } catch (e: any) {
+    notification.error('Помилка', e.message || 'Не вдалося завантажити дані користувача')
+  }
 })
 </script>
 

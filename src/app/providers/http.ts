@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/entities/session';
+import { useSessionStore } from '@/entities/session';
 import { http, ServiceProvider } from '@/shared/api';
 
 export function setupHttpInterceptors() {
@@ -9,20 +9,16 @@ export function setupHttpInterceptors() {
 
             if (error.response?.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true;
-                const authStore = useAuthStore();
-
+                const sessionStore = useSessionStore();
                 try {
-                    if (!authStore.refreshToken) throw new Error('No refresh token');
-
+                    if (!sessionStore.refreshToken) throw new Error('No refresh token');
                     const authService = ServiceProvider.get<any>('auth');
-                    const data = await authService.refresh(authStore.refreshToken);
-
-                    authStore.setTokens(data.accessToken, data.refreshToken);
+                    const data = await authService.refresh(sessionStore.refreshToken);
+                    sessionStore.setSession(data.accessToken, data.refreshToken);
                     originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-
                     return http(originalRequest);
                 } catch (refreshError) {
-                    authStore.logout();
+                    sessionStore.logout();
                     window.location.href = '/#/login';
                     return Promise.reject(refreshError);
                 }
