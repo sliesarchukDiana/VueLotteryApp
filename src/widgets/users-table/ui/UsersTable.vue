@@ -6,18 +6,15 @@ import { useUsersStore } from '@/entities/user'
 import { AppTable, AppConfirmDialog, AppButton, AppInput } from '@/shared/ui'
 
 const emit = defineEmits<{ (e: 'user-deleted', id: number): void }>()
-
 const route = useRoute()
 const router = useRouter()
-const usersStore = useUsersStore()
-const { users, total } = storeToRefs(usersStore)
 
-const isLoading = ref(false)
-const error = ref('')
+const usersStore = useUsersStore()
+const { users, total, isLoading, error } = storeToRefs(usersStore)
+
 const limit = 10
 const currentPage = ref(Number(route.query.page) || 1)
 const searchQuery = ref((route.query.q as string) || '')
-
 const isDeleteModalOpen = ref(false)
 const userToDelete = ref<number | null>(null)
 
@@ -28,16 +25,10 @@ const tableColumns = [
 ]
 
 const fetchUsers = async () => {
-  isLoading.value = true
-  error.value = ''
   try {
     const skip = (currentPage.value - 1) * limit
     await usersStore.fetchUsers({ limit, skip, q: searchQuery.value })
-  } catch (e: any) {
-    error.value = e.message
-  } finally {
-    isLoading.value = false
-  }
+  } catch (e) { /* empty */ }
 }
 
 const updateUrl = () => {
@@ -71,9 +62,7 @@ const confirmDelete = async () => {
     await usersStore.deleteUser(userToDelete.value)
     emit('user-deleted', userToDelete.value)
     await fetchUsers()
-  } catch (e: any) {
-    error.value = e.message
-  } finally {
+  } catch (e) { /* empty */ } finally {
     isDeleteModalOpen.value = false
     userToDelete.value = null
   }
@@ -98,7 +87,7 @@ onMounted(fetchUsers)
           class="search-input"
       />
       <AppButton label="Знайти" @click="handleSearch" />
-      <AppButton label="Додати" severity="success" @click="router.push('/users/new')" />
+      <AppButton label="Створити" severity="success" @click="router.push('/users/new')" />
     </div>
 
     <div v-if="error" class="error">{{ error }}</div>
@@ -115,7 +104,7 @@ onMounted(fetchUsers)
       <template #actions="{ item }">
         <div class="action-buttons">
           <AppButton label="Деталі" severity="info" @click="router.push(`/users/${item.id}`)" />
-          <AppButton label="Редагувати" severity="secondary" @click="router.push(`/users/${item.id}/edit`)" />
+          <AppButton label="Редаг." severity="secondary" @click="router.push(`/users/${item.id}/edit`)" />
           <AppButton label="Видалити" severity="danger" @click="openDeleteModal(item.id)" />
         </div>
       </template>
@@ -129,8 +118,8 @@ onMounted(fetchUsers)
 
     <AppConfirmDialog
         :is-open="isDeleteModalOpen"
-        title="Підтвердження"
-        message="Ви дійсно хочете видалити цього користувача?"
+        title="Видалення"
+        message="Видалити користувача?"
         @close="isDeleteModalOpen = false"
         @confirm="confirmDelete"
     />
@@ -145,11 +134,9 @@ onMounted(fetchUsers)
   align-items: center;
   flex-wrap: wrap;
 }
-
 .search-input {
   flex: 1 1 300px;
 }
-
 .action-buttons {
   display: flex;
   gap: 8px;
@@ -158,7 +145,6 @@ onMounted(fetchUsers)
     font-size: 0.875rem;
   }
 }
-
 .pagination {
   display: flex;
   gap: 16px;
@@ -169,14 +155,12 @@ onMounted(fetchUsers)
   background: var(--bg-color);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-
   span {
     font-weight: 500;
     min-width: 80px;
     text-align: center;
   }
 }
-
 .error {
   color: #ef4444;
   background: #fef2f2;
@@ -185,7 +169,6 @@ onMounted(fetchUsers)
   margin-bottom: 1.5rem;
   border: 1px solid #fca5a5;
 }
-
 :root.dark-theme .error {
   background: #450a0a;
   border-color: #7f1d1d;

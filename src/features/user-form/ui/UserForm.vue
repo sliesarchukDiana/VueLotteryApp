@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
+import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/entities/user'
-import { AppInput, AppButton, useNotification } from '@/shared/ui'
+import { AppInput, AppButton } from '@/shared/ui'
+import { useToast } from 'primevue/usetoast'
 
-const notify = useNotification()
+const toast = useToast()
 const props = defineProps<{ id?: string }>()
 const router = useRouter()
-const usersStore = useUsersStore()
 
-const isLoading = ref(false)
-const error = ref('')
+const usersStore = useUsersStore()
+const { isLoading, error } = storeToRefs(usersStore)
 
 const isEditing = computed(() => !!props.id)
 
 const schema = toTypedSchema(
     z.object({
-      firstName: z.string().min(1, 'Ім\'я обов\'язкове'),
-      lastName: z.string().min(1, 'Прізвище обов\'язкове'),
+      firstName: z.string().min(1, 'Обов\'язкове поле'),
+      lastName: z.string().min(1, 'Обов\'язкове поле'),
       email: z.string().email('Некоректний email'),
       username: z.string().min(3, 'Мінімум 3 символи'),
       password: z.string().min(6, 'Мінімум 6 символів'),
-      age: z.number().min(1, 'Вік обов\'язковий'),
-      gender: z.string().min(1, 'Стать обов\'язкова'),
-      phone: z.string().min(5, 'Телефон обов\'язковий')
+      age: z.number().min(1, 'Вік має бути більше 0'),
+      gender: z.string().min(1, 'Обов\'язкове поле'),
+      phone: z.string().min(5, 'Обов\'язкове поле')
     })
 )
 
@@ -46,34 +47,26 @@ const { value: phone } = useField<string>('phone')
 
 onMounted(async () => {
   if (isEditing.value) {
-    isLoading.value = true
     try {
       const data = await usersStore.getUserById(Number(props.id))
       setValues(data)
     } catch (e: any) {
-      error.value = e.message
-    } finally {
-      isLoading.value = false
     }
   }
 })
 
 const onSubmit = handleSubmit(async (values) => {
-  isLoading.value = true
   try {
     if (isEditing.value) {
       await usersStore.updateUser(Number(props.id), values)
-      notify.success('Успіх', 'Користувача оновлено')
+      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача оновлено', life: 3000 })
     } else {
       await usersStore.addUser(values)
-      notify.success('Успіх', 'Користувача створено')
+      toast.add({ severity: 'success', summary: 'Успіх', detail: 'Користувача створено', life: 3000 })
     }
     router.push('/users')
   } catch (e: any) {
-    error.value = e.message
-    notify.error('Помилка', e.message)
-  } finally {
-    isLoading.value = false
+    toast.add({ severity: 'error', summary: 'Помилка', detail: e.message || 'Сталася помилка', life: 3000 })
   }
 })
 </script>
@@ -91,9 +84,10 @@ const onSubmit = handleSubmit(async (values) => {
       <AppInput v-model.number="age" type="number" label="Вік" :error-message="errors.age" />
       <AppInput v-model="gender" label="Стать (male/female)" :error-message="errors.gender" />
       <AppInput v-model="phone" label="Телефон" :error-message="errors.phone" />
+
       <div class="actions">
         <AppButton type="button" label="Скасувати" severity="secondary" @click="router.back()" />
-        <AppButton type="submit" :label="isEditing ? 'Зберегти зміни' : 'Створити користувача'" :disabled="isLoading" />
+        <AppButton type="submit" :label="isEditing ? 'Зберегти' : 'Створити'" :disabled="isLoading" />
       </div>
     </form>
   </div>

@@ -1,25 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/entities/user'
 import type { User } from '@/entities/user'
 import { AppButton } from '@/shared/ui'
 
 const props = defineProps<{ id: string }>()
 const router = useRouter()
+
 const usersStore = useUsersStore()
+const { isLoading, error } = storeToRefs(usersStore)
+
 const user = ref<User | null>(null)
-const isLoading = ref(true)
-const error = ref('')
 
 onMounted(async () => {
   try {
     user.value = await usersStore.getUserById(Number(props.id))
-  } catch (e: any) {
-    error.value = e.message
-  } finally {
-    isLoading.value = false
-  }
+  } catch (e) { /* something went wrong */ }
 })
 </script>
 
@@ -29,7 +27,6 @@ onMounted(async () => {
 
     <div v-if="isLoading" class="loading-state">Завантаження...</div>
     <div v-else-if="error" class="error-msg">{{ error }}</div>
-
     <div v-else-if="user" class="details-content">
       <div class="info-list">
         <div class="info-item">
@@ -37,7 +34,7 @@ onMounted(async () => {
           <span class="value">#{{ user.id }}</span>
         </div>
         <div class="info-item">
-          <span class="label">Повне ім'я</span>
+          <span class="label">Ім'я</span>
           <span class="value">{{ user.firstName }} {{ user.lastName }}</span>
         </div>
         <div class="info-item">
@@ -80,7 +77,6 @@ onMounted(async () => {
   font-weight: 500;
   padding: 1rem 0;
 }
-
 .error-msg {
   color: #ef4444;
   background: #fef2f2;
@@ -89,16 +85,13 @@ onMounted(async () => {
   border: 1px solid #fecaca;
   margin-bottom: 1.5rem;
 }
-
 :root.dark-theme .error-msg {
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.2);
 }
-
 .details-content {
   max-width: 900px;
 }
-
 .info-list {
   display: flex;
   flex-direction: column;
@@ -108,7 +101,6 @@ onMounted(async () => {
   border: 1px solid var(--border-color);
   margin-bottom: 2rem;
 }
-
 .info-item {
   display: flex;
   flex-direction: column;
@@ -127,14 +119,12 @@ onMounted(async () => {
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-
   .value {
     font-size: 1.05rem;
     color: var(--text-color);
     font-weight: 500;
   }
 }
-
 .actions-footer {
   display: flex;
   justify-content: flex-start;
