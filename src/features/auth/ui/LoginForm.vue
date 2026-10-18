@@ -66,9 +66,43 @@ const onSubmit = handleSubmit(async (values) => {
 </template>
 
 <style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
 .error-msg {
-  color: #e57373;
-  margin-bottom: 1rem;
-  font-size: 14px;
+  color: #ef4444;
+  font-size: 0.875rem;
+  text-align: center;
+  background: #fef2f2;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid #fecaca;
+}
+
+:root.dark-theme .error-msg {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+:deep(.p-button) {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.5px;
+}
+
+:deep(.p-button:hover) {
+  background-color: var(--primary-hover) !important;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
 }
 </style>

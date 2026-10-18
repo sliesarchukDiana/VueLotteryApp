@@ -43,29 +43,35 @@ defineEmits<{
 
 <style scoped lang="scss">
 .winner-card {
-  max-width: 600px;
-  margin: 0 auto 1.5rem auto;
-  border: 1px solid #e1e4e8;
-  padding: 8px 12px;
+  max-width: 100%;
+  background: var(--bg-color);
+  border: 1px dashed var(--border-color);
+  box-shadow: none;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .winner-input-area {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .winners-container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 38px;
+  min-height: 44px;
   flex-grow: 1;
+  gap: 4px;
 }
 
 .placeholder-text {
-  color: #9e9e9e;
+  color: var(--text-muted);
   font-size: 14px;
+  font-weight: 500;
+  font-style: italic;
 }
 </style>

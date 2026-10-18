@@ -26,7 +26,7 @@ defineEmits<{ (e: 'update:modelValue', value: string | number): void }>();
   </div>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .app-input-group { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
 .p-error { color: #e57373; font-size: 0.875rem; }
 </style>

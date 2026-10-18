@@ -26,9 +26,42 @@ const handleLogout = () => {
 <style scoped lang="scss">
 .nav-links {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+      background: var(--bg-color);
+    }
+
+    &.active-link {
+      opacity: 1;
+      background: var(--primary-color);
+      color: #ffffff;
+      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+    }
+  }
 }
+
 .logout-btn {
   cursor: pointer;
+  color: #ef4444 !important;
+
+  &:hover {
+    background: #fef2f2 !important;
+  }
+}
+
+:root.dark-theme .logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
 }
 </style>

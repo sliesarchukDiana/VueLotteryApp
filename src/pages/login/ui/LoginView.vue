@@ -15,11 +15,23 @@ import { LoginForm } from '@/features/auth'
 
 <style scoped>
 .login-container {
-  max-width: 400px;
-  margin: 4rem auto;
+  max-width: 420px;
+  margin: 10vh auto;
+  padding: 2.5rem 2rem;
+}
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.75rem;
 }
 .test-credentials {
-  margin-top: 1rem;
-  color: #666;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--bg-color);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 0.875rem;
+  opacity: 0.8;
 }
 </style>

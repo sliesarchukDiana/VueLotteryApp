@@ -138,9 +138,57 @@ onMounted(fetchUsers)
 </template>
 
 <style scoped lang="scss">
-.controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: flex-start; }
-.search-input { flex-grow: 1; }
-.action-buttons { display: flex; gap: 5px; }
-.pagination { display: flex; gap: 15px; align-items: center; margin-top: 20px; justify-content: center; }
-.error { color: red; margin-bottom: 1rem; }
+.controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1 1 300px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  :deep(.p-button) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
+}
+
+.pagination {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  padding: 12px;
+  background: var(--bg-color);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+
+  span {
+    font-weight: 500;
+    min-width: 80px;
+    text-align: center;
+  }
+}
+
+.error {
+  color: #ef4444;
+  background: #fef2f2;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1.5rem;
+  border: 1px solid #fca5a5;
+}
+
+:root.dark-theme .error {
+  background: #450a0a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
 </style>

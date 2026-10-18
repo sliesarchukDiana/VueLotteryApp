@@ -13,6 +13,6 @@ import { RouterLink } from 'vue-router'
   font-weight: 700;
   font-size: 1.2rem;
   text-decoration: none;
-  color: #333;
+  color: #2563eb;
 }
 </style>
